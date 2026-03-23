@@ -17,20 +17,22 @@ Este proyecto documenta la implementación de una topología de red compleja uti
 Se ha restringido el acceso administrativo únicamente a los vecinos directos para proteger el plano de gestión:
 * **Router1**: Solo permite acceso desde la IP `10.0.0.6` (Router2).
 * **Router4**: Solo permite acceso desde la IP `10.0.0.9` (Router3).
-
-### B. Filtrado de Tráfico (ACL Estándar)
-En el **Router4**, se aplica la ACL `RESTRICCION` para filtrar el tráfico de datos hacia las redes locales:
-* **Bloqueo de Host**: Deniega el tráfico del host `192.168.1.200`.
-* **Bloqueo de Subred**: Deniega el acceso a la red `192.168.2.0/24`.
-
-## 4. Pruebas de Verificación
+Se ha implementado el principio de **Privilegio Mínimo** para la gestión remota vía Telnet:
+* **Restricción Taxativa**: Solo se permite la gestión desde IPs de vecinos directos.
+* **Validación**: Intentos desde nodos de usuario (PC0/PC2) son rechazados con el mensaje `% Connection refused by remote host`.
+## Pruebas de Verificación
 ### Evidencia de Bloqueo Telnet (PC a Router)
 ```text
 C:\> telnet 10.0.0.10
 Trying 10.0.0.10 ...
 % Connection refused by remote host
 ```
-##  5. Arquitectura Lógica de la Red
+### B. Filtrado de Tráfico (ACL Estándar)
+En el **Router4**, se aplica la ACL `RESTRICCION` para filtrar el tráfico de datos hacia las redes locales:
+* **Bloqueo de Host**: Deniega el tráfico del host `192.168.1.200`.
+* **Bloqueo de Subred**: Deniega el acceso a la red `192.168.2.0/24`.
+
+##  4. Arquitectura Lógica de la Red
 La topología se fundamenta en un diseño de tres niveles, optimizando la convergencia mediante **OSPF (ID 10)**.
 * **Área 0 (Backbone)**: Núcleo de la red que interconecta los Border Routers (R2 y R3).
 * **Área 10 (Acceso Oeste)**: Gestionada por el **Router1**, sirve a las subredes `192.168.1.0/24` y `192.168.2.0/24`.
